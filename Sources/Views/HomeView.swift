@@ -1,8 +1,6 @@
 import SwiftUI
 
 struct HomeView: View {
-    private let columns = [GridItem(.flexible()), GridItem(.flexible())]
-
     var body: some View {
         NavigationView {
             ZStack {
@@ -20,17 +18,17 @@ struct HomeView: View {
                 VStack(spacing: 20) {
                     // タイトルセクション
                     VStack(spacing: 8) {
-                        Text("福祉住環境")
+                        Text("日本語検定")
                             .font(.largeTitle)
                             .fontWeight(.bold)
                             .foregroundColor(.black)
                         
-                        Text("コーディネーター2級")
+                        Text("3級対策クイズ")
                             .font(.largeTitle)
                             .fontWeight(.bold)
                             .foregroundColor(.black)
                         
-                        Text("問題集")
+                        Text("50問演習")
                             .font(.system(size: 48, weight: .bold))
                             .fontWeight(.bold)
                             .foregroundColor(.black)
@@ -39,7 +37,7 @@ struct HomeView: View {
                     
                     // クイズボタングリッド
                     ScrollView {
-                        LazyVGrid(columns: columns, spacing: 16) {
+                        LazyVStack(spacing: 16) {
                             ForEach(QuizTopic.allCases) { topic in
                                 NavigationLink(destination: QuizView(topic: topic)) {
                                     Text(topic.title)
@@ -53,7 +51,7 @@ struct HomeView: View {
                                 .buttonStyle(PlainButtonStyle())
                             }
                         }
-                        .padding(.horizontal, 16)
+                        .padding(.horizontal, 32)
                     }
                     
                     Spacer()

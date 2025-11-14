@@ -38,7 +38,7 @@ struct QuizView: View {
                     .padding(.horizontal)
                     
                     // 問題文
-                    Text(questions[currentQuestionIndex].text)
+                    Text(questions[currentQuestionIndex].question)
                         .font(.title3)
                         .fontWeight(.medium)
                         .foregroundColor(.black)
@@ -51,7 +51,6 @@ struct QuizView: View {
                     // 選択肢
                     VStack(spacing: 12) {
                         ForEach(0..<questions[currentQuestionIndex].choices.count, id: \.self) { index in
-                            let choiceLabels = ["A.", "B.", "C.", "D."]
                             Button(action: {
                                 if selectedAnswer == nil {
                                     selectedAnswer = index
@@ -59,10 +58,6 @@ struct QuizView: View {
                                 }
                             }) {
                                 HStack(alignment: .top, spacing: 12) {
-                                    Text(choiceLabels[index])
-                                        .font(.body)
-                                        .fontWeight(.semibold)
-                                        .foregroundColor(.black)
                                     Text(questions[currentQuestionIndex].choices[index])
                                         .font(.body)
                                         .foregroundColor(.black)
@@ -74,7 +69,7 @@ struct QuizView: View {
                                 .background(
                                     Group {
                                         if showExplanation {
-                                            if index == questions[currentQuestionIndex].correct {
+                                            if index == questions[currentQuestionIndex].answerIndex {
                                                 Color.green.opacity(0.3)
                                             } else if index == selectedAnswer {
                                                 Color.red.opacity(0.3)
@@ -101,10 +96,10 @@ struct QuizView: View {
                     if showExplanation {
                         VStack(spacing: 12) {
                             // 正解・不正解表示
-                            Text(selectedAnswer == questions[currentQuestionIndex].correct ? "正解！" : "不正解")
+                            Text(selectedAnswer == questions[currentQuestionIndex].answerIndex ? "正解！" : "不正解")
                                 .font(.title)
                                 .fontWeight(.bold)
-                                .foregroundColor(selectedAnswer == questions[currentQuestionIndex].correct ? .black : .red)
+                                .foregroundColor(selectedAnswer == questions[currentQuestionIndex].answerIndex ? .black : .red)
                                 .padding(.horizontal)
                             
                             // 解説
@@ -135,7 +130,7 @@ struct QuizView: View {
         }
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle(topic.title)
-        .navigationBarBackButtonHidden(false)
+        .navigationBarBackButtonHidden(true)
         .onAppear {
             loadQuestions()
         }
@@ -153,7 +148,7 @@ struct QuizView: View {
     }
     
     private func nextQuestion() {
-        if let selected = selectedAnswer, selected == questions[currentQuestionIndex].correct {
+        if let selected = selectedAnswer, selected == questions[currentQuestionIndex].answerIndex {
             correctAnswers += 1
         }
         

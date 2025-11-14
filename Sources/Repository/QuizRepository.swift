@@ -7,19 +7,24 @@ class QuizRepository: ObservableObject {
     
     func loadQuestions(for topic: QuizTopic) -> [Question] {
         guard let url = Bundle.main.url(forResource: topic.fileName, withExtension: "json", subdirectory: "questions"),
-              let data = try? Data(contentsOf: url),
-              let questions = try? JSONDecoder().decode([Question].self, from: data) else {
+              let data = try? Data(contentsOf: url) else {
             print("Failed to load questions for \(topic.fileName)")
             return []
         }
         
-        // 2問のダミーデータを10問に拡張（重複補完）
-        var expandedQuestions: [Question] = []
-        for i in 0..<10 {
-            let questionIndex = i % questions.count
-            expandedQuestions.append(questions[questionIndex])
+        do {
+            let allQuestions = try JSONDecoder().decode([Question].self, from: data)
+            let filtered = allQuestions.filter { $0.category == topic.category }
+            let source = filtered.isEmpty ? allQuestions : filtered
+            if filtered.isEmpty {
+                print("Warning: No category match for \(topic.category). Falling back to full question set.")
+            }
+            
+            let shuffled = source.shuffled()
+            return Array(shuffled.prefix(min(10, shuffled.count)))
+        } catch {
+            print("Decoding error for \(topic.fileName): \(error)")
+            return []
         }
-        
-        return expandedQuestions.shuffled()
     }
 }
