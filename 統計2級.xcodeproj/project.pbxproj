@@ -22,7 +22,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		100 /* 日本語検定3級.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "日本語検定3級.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		100 /* 統計2級.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "統計2級.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		101 /* AppMain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppMain.swift; sourceTree = "<group>"; };
 		102 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		103 /* AdsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdsManager.swift; sourceTree = "<group>"; };
@@ -119,7 +119,7 @@
 		500 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				100 /* 日本語検定3級.app */,
+				100 /* 統計2級.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -127,9 +127,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		001T /* 日本語検定3級 */ = {
+		001T /* 統計2級 */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 002C /* Build configuration list for PBXNativeTarget "日本語検定3級" */;
+			buildConfigurationList = 002C /* Build configuration list for PBXNativeTarget "統計2級" */;
 			buildPhases = (
 				001S /* Sources */,
 				001F /* Frameworks */,
@@ -139,12 +139,12 @@
 			);
 			dependencies = (
 			);
-			name = "日本語検定3級";
+			name = "統計2級";
 			packageProductDependencies = (
 				301 /* GoogleMobileAds */,
 			);
 			productName = FK2QuizApp;
-			productReference = 100 /* 日本語検定3級.app */;
+			productReference = 100 /* 統計2級.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -162,7 +162,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 001C /* Build configuration list for PBXProject "日本語検定3級" */;
+			buildConfigurationList = 001C /* Build configuration list for PBXProject "統計2級" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = ja;
 			hasScannedForEncodings = 0;
@@ -179,7 +179,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				001T /* 日本語検定3級 */,
+				001T /* 統計2級 */,
 			);
 		};
 /* End PBXProject section */
@@ -398,7 +398,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		001C /* Build configuration list for PBXProject "日本語検定3級" */ = {
+		001C /* Build configuration list for PBXProject "統計2級" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				001D /* Debug */,
@@ -407,7 +407,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		002C /* Build configuration list for PBXNativeTarget "日本語検定3級" */ = {
+		002C /* Build configuration list for PBXNativeTarget "統計2級" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				002D /* Debug */,

@@ -11,16 +11,17 @@ struct QuizView: View {
     
     var body: some View {
         ZStack {
-            // グラデーション背景
-            LinearGradient(
-                gradient: Gradient(colors: [
-                    Color(red: 0.6, green: 0.8, blue: 1.0),
-                    Color(red: 0.4, green: 0.6, blue: 0.9)
-                ]),
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-            .ignoresSafeArea()
+            // 背景画像
+            if let path = Bundle.main.path(forResource: "background_statistics", ofType: "png", inDirectory: "questions"),
+               let uiImage = UIImage(contentsOfFile: path) {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .ignoresSafeArea()
+            } else {
+                // 画像読み込み失敗時のフォールバック
+                Color(red: 0.95, green: 0.95, blue: 0.97).ignoresSafeArea()
+            }
             
             VStack(spacing: 20) {
                 if !questions.isEmpty {
