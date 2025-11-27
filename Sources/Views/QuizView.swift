@@ -1,5 +1,61 @@
 import SwiftUI
 
+// 質問カード（簿記アプリスタイル）
+struct QuestionCardView: View {
+    let text: String
+    
+    var body: some View {
+        Text(text)
+            .font(.body)
+            .fontWeight(.medium)
+            .foregroundColor(.black)
+            .multilineTextAlignment(.center)
+            .fixedSize(horizontal: false, vertical: true)
+            .padding(.vertical, 20)
+            .padding(.horizontal, 24)
+            .frame(maxWidth: .infinity)
+            .background(Color.white.opacity(0.95))
+            .cornerRadius(16)
+            .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
+    }
+}
+
+// 選択肢カード（簿記アプリスタイル: ラベルなし、テキストのみ）
+struct ChoiceCardView: View {
+    let text: String
+    let isCorrect: Bool?
+    let isSelected: Bool
+    let showExplanation: Bool
+    
+    var body: some View {
+        HStack(alignment: .top, spacing: 12) {
+            Text(text)
+                .font(.body)
+                .foregroundColor(.black)
+                .multilineTextAlignment(.leading)
+                .fixedSize(horizontal: false, vertical: true)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .padding(.vertical, 14)
+        .padding(.horizontal, 16)
+        .background(backgroundColorForChoice())
+        .cornerRadius(12)
+        .shadow(color: .black.opacity(0.08), radius: 3, x: 0, y: 1)
+    }
+    
+    private func backgroundColorForChoice() -> Color {
+        if !showExplanation {
+            return .white
+        }
+        if let isCorrect = isCorrect, isCorrect {
+            return Color.green.opacity(0.3)
+        } else if isSelected {
+            return Color.red.opacity(0.3)
+        }
+        return .white
+    }
+}
+
 struct QuizView: View {
     let topic: QuizTopic
     @State private var questions: [Question] = []
@@ -11,122 +67,104 @@ struct QuizView: View {
     
     var body: some View {
         ZStack {
-            // 背景画像
-            if let path = Bundle.main.path(forResource: "background_statistics", ofType: "png", inDirectory: "questions"),
-               let uiImage = UIImage(contentsOfFile: path) {
-                Image(uiImage: uiImage)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .ignoresSafeArea()
-            } else {
-                // 画像読み込み失敗時のフォールバック
-                Color(red: 0.95, green: 0.95, blue: 0.97).ignoresSafeArea()
-            }
+            // 背景グラデーション（簿記アプリ風）
+            LinearGradient(
+                gradient: Gradient(colors: [
+                    Color(red: 0.4, green: 0.8, blue: 0.8),
+                    Color(red: 0.3, green: 0.6, blue: 0.9)
+                ]),
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            .ignoresSafeArea()
             
-            VStack(spacing: 20) {
-                if !questions.isEmpty {
-                    // 問題番号表示
-                    HStack {
-                        Text("第\(currentQuestionIndex + 1)問")
-                            .font(.title2)
-                            .fontWeight(.bold)
-                            .foregroundColor(.black)
-                        Spacer()
-                        Text("\(currentQuestionIndex + 1) / \(questions.count)")
-                            .font(.headline)
-                            .foregroundColor(.black)
-                    }
-                    .padding(.horizontal)
-                    
-                    // 問題文
-                    Text(questions[currentQuestionIndex].question)
-                        .font(.title3)
-                        .fontWeight(.medium)
-                        .foregroundColor(.black)
-                        .multilineTextAlignment(.center)
-                        .padding()
-                        .background(Color.white.opacity(0.9))
-                        .cornerRadius(12)
-                        .padding(.horizontal)
-                    
-                    // 選択肢
-                    VStack(spacing: 12) {
-                        ForEach(0..<questions[currentQuestionIndex].choices.count, id: \.self) { index in
-                            Button(action: {
-                                if selectedAnswer == nil {
-                                    selectedAnswer = index
-                                    showExplanation = true
-                                }
-                            }) {
-                                HStack(alignment: .top, spacing: 12) {
-                                    Text(questions[currentQuestionIndex].choices[index])
-                                        .font(.body)
-                                        .foregroundColor(.black)
-                                        .multilineTextAlignment(.leading)
-                                    Spacer()
-                                }
-                                .padding()
-                                .frame(maxWidth: .infinity, minHeight: 50)
-                                .background(
-                                    Group {
-                                        if showExplanation {
-                                            if index == questions[currentQuestionIndex].answerIndex {
-                                                Color.green.opacity(0.3)
-                                            } else if index == selectedAnswer {
-                                                Color.red.opacity(0.3)
-                                            } else {
-                                                Color.white
-                                            }
-                                        } else {
-                                            Color.white
-                                        }
-                                    }
-                                )
-                                .cornerRadius(8)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 8)
-                                        .stroke(Color.gray, lineWidth: 1)
-                                )
-                            }
-                            .disabled(selectedAnswer != nil)
-                        }
-                    }
-                    .padding(.horizontal)
-                    
-                    // 正解・不正解表示と解説
-                    if showExplanation {
-                        VStack(spacing: 12) {
-                            // 正解・不正解表示
-                            Text(selectedAnswer == questions[currentQuestionIndex].answerIndex ? "正解！" : "不正解")
-                                .font(.title)
+            ScrollView {
+                VStack(spacing: 20) {
+                    if !questions.isEmpty {
+                        // ヘッダー（問題番号）
+                        HStack {
+                            Text("第\(currentQuestionIndex + 1)問")
+                                .font(.title2)
                                 .fontWeight(.bold)
-                                .foregroundColor(selectedAnswer == questions[currentQuestionIndex].answerIndex ? .black : .red)
-                                .padding(.horizontal)
+                                .foregroundColor(.white)
+                            Spacer()
+                            Text("\(currentQuestionIndex + 1) / \(questions.count)")
+                                .font(.headline)
+                                .foregroundColor(.white.opacity(0.9))
+                        }
+                        .padding(.horizontal, 24)
+                        .padding(.top, 16)
+                        
+                        // 質問カード
+                        QuestionCardView(text: questions[currentQuestionIndex].question)
+                            .padding(.horizontal, 24)
+                        
+                        // 選択肢
+                        VStack(spacing: 12) {
+                            ForEach(0..<questions[currentQuestionIndex].choices.count, id: \.self) { index in
+                                Button {
+                                    if selectedAnswer == nil {
+                                        selectedAnswer = index
+                                        showExplanation = true
+                                    }
+                                } label: {
+                                    ChoiceCardView(
+                                        text: questions[currentQuestionIndex].choices[index],
+                                        isCorrect: index == questions[currentQuestionIndex].answerIndex ? true : nil,
+                                        isSelected: selectedAnswer == index,
+                                        showExplanation: showExplanation
+                                    )
+                                }
+                                .disabled(selectedAnswer != nil)
+                            }
+                        }
+                        .padding(.horizontal, 24)
+                        
+                        // 正解・不正解表示と解説
+                        if showExplanation {
+                            VStack(spacing: 16) {
+                                // 正解・不正解表示
+                                Text(selectedAnswer == questions[currentQuestionIndex].answerIndex ? "正解！" : "不正解")
+                                    .font(.title)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(.white)
+                                    .padding(.top, 8)
+                                
+                                // 解説カード
+                                Text(questions[currentQuestionIndex].explanation)
+                                    .font(.body)
+                                    .foregroundColor(.black)
+                                    .multilineTextAlignment(.leading)
+                                    .fixedSize(horizontal: false, vertical: true)
+                                    .padding(.vertical, 20)
+                                    .padding(.horizontal, 20)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .background(Color.white.opacity(0.95))
+                                    .cornerRadius(16)
+                                    .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
+                            }
+                            .padding(.horizontal, 24)
                             
-                            // 解説
-                            Text(questions[currentQuestionIndex].explanation)
-                                .font(.body)
-                                .foregroundColor(.black)
-                                .multilineTextAlignment(.center)
-                                .padding()
-                                .background(Color.white.opacity(0.9))
-                                .cornerRadius(12)
-                                .padding(.horizontal)
+                            // 次の問題ボタン
+                            Button(action: nextQuestion) {
+                                Text(currentQuestionIndex == questions.count - 1 ? "結果を見る" : "次の問題")
+                                    .font(.headline)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(.white)
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 16)
+                                    .background(Color(red: 0.2, green: 0.4, blue: 0.8))
+                                    .cornerRadius(12)
+                                    .shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 2)
+                            }
+                            .padding(.horizontal, 24)
+                            .padding(.bottom, 20)
                         }
                         
-                        Button(action: nextQuestion) {
-                            Text(currentQuestionIndex == questions.count - 1 ? "結果を見る" : "次の問題")
-                                .font(.headline)
-                                .foregroundColor(.white)
-                                .frame(maxWidth: .infinity, minHeight: 50)
-                                .background(Color(red: 0.2, green: 0.4, blue: 0.8))
-                                .cornerRadius(12)
-                        }
-                        .padding(.horizontal)
+                        Spacer(minLength: 30)
                     }
-                    
-                    Spacer()
                 }
+                .padding(.bottom, 40)
             }
         }
         .navigationBarTitleDisplayMode(.inline)

@@ -19,18 +19,13 @@ struct HomeView: View {
                 VStack(spacing: 20) {
                     // タイトルセクション
                     VStack(spacing: 8) {
-                        Text("日本語検定")
+                        Text("統計検定")
                             .font(.largeTitle)
                             .fontWeight(.bold)
                             .foregroundColor(.black)
                         
-                        Text("3級対策クイズ")
+                        Text("2級テスト対策")
                             .font(.largeTitle)
-                            .fontWeight(.bold)
-                            .foregroundColor(.black)
-                        
-                        Text("50問演習")
-                            .font(.system(size: 48, weight: .bold))
                             .fontWeight(.bold)
                             .foregroundColor(.black)
                     }
@@ -38,15 +33,15 @@ struct HomeView: View {
                     
                     // クイズボタングリッド
                     ScrollView {
-                        LazyVStack(spacing: 16) {
+                        LazyVStack(spacing: 10) {
                             ForEach(QuizTopic.allCases) { topic in
                                 NavigationLink(destination: QuizView(topic: topic)) {
                                     Text(topic.title)
-                                        .font(.headline)
+                                        .font(.subheadline)
                                         .foregroundColor(Color(red: 0.2, green: 0.4, blue: 0.8))
-                                        .frame(maxWidth: .infinity, minHeight: 72)
+                                        .frame(maxWidth: .infinity, minHeight: 50)
                                         .background(Color.white)
-                                        .cornerRadius(16)
+                                        .cornerRadius(12)
                                         .shadow(color: .gray.opacity(0.3), radius: 4, x: 0, y: 2)
                                 }
                                 .buttonStyle(PlainButtonStyle())
