@@ -187,8 +187,16 @@ struct QuizView: View {
     }
     
     private func nextQuestion() {
-        if let selected = selectedAnswer, selected == questions[currentQuestionIndex].answerIndex {
-            correctAnswers += 1
+        if let selected = selectedAnswer {
+            let isCorrect = selected == questions[currentQuestionIndex].answerIndex
+            if isCorrect {
+                correctAnswers += 1
+            }
+            // 結果を履歴に保存
+            HistoryManager.shared.saveResult(
+                questionId: questions[currentQuestionIndex].id,
+                isCorrect: isCorrect
+            )
         }
         
         if currentQuestionIndex < questions.count - 1 {

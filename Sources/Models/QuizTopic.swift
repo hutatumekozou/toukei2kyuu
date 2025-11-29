@@ -11,6 +11,7 @@ enum QuizTopic: CaseIterable, Identifiable {
     case stat8
     case stat9
     case stat10
+    case mistakes
     
     var id: String { category }
     
@@ -26,6 +27,7 @@ enum QuizTopic: CaseIterable, Identifiable {
         case .stat8: return "ジャンル8: 仮説検定"
         case .stat9: return "ジャンル9: カイ二乗検定"
         case .stat10: return "ジャンル10: 線形モデル"
+        case .mistakes: return "最近間違えた問題"
         }
     }
     
@@ -41,6 +43,7 @@ enum QuizTopic: CaseIterable, Identifiable {
         case .stat8: return "仮説検定"
         case .stat9: return "カイ二乗検定"
         case .stat10: return "線形モデル"
+        case .mistakes: return "mistakes"
         }
     }
     

@@ -13,7 +13,28 @@ class QuizRepository: ObservableObject {
         }
         
         do {
+
             let allQuestions = try JSONDecoder().decode([Question].self, from: data)
+            
+            // 間違えた問題のみの特別ロジック
+            if topic == .mistakes {
+                let incorrectIDs = HistoryManager.shared.getIncorrectQuestionIDs()
+                if incorrectIDs.isEmpty {
+                    // 履歴がない場合はランダムに10問
+                    let shuffled = allQuestions.shuffled()
+                    return Array(shuffled.prefix(min(10, shuffled.count)))
+                } else {
+                    // 間違えた問題IDに一致するものを全て取得
+                    let mistakes = allQuestions.filter { incorrectIDs.contains($0.id) }
+                    // IDがあっても問題データが見つからない場合（データ変更など）の対策
+                    if mistakes.isEmpty {
+                        let shuffled = allQuestions.shuffled()
+                        return Array(shuffled.prefix(min(10, shuffled.count)))
+                    }
+                    return mistakes
+                }
+            }
+            
             let filtered = allQuestions.filter { $0.category == topic.category }
             let source = filtered.isEmpty ? allQuestions : filtered
             if filtered.isEmpty {

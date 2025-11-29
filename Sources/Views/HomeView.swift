@@ -1,62 +1,126 @@
 import SwiftUI
 
 struct HomeView: View {
+    // ハード要件: グリッドは2列固定
+    private let columns = [
+        GridItem(.flexible(), spacing: 12),
+        GridItem(.flexible(), spacing: 12)
+    ]
+    
+    @State private var mistakeCount: Int = 0
+
     var body: some View {
+        // ハード要件: NavigationStack (iOS 16未満互換のためNavigationViewを使用)
         NavigationView {
-            ZStack {
-                // 背景画像
-                if let path = Bundle.main.path(forResource: "background_statistics", ofType: "png", inDirectory: "questions"),
-                   let uiImage = UIImage(contentsOfFile: path) {
-                    Image(uiImage: uiImage)
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .ignoresSafeArea()
-                } else {
-                    // 画像読み込み失敗時のフォールバック
-                    Color(red: 0.95, green: 0.95, blue: 0.97).ignoresSafeArea()
-                }
-                
-                VStack(spacing: 20) {
-                    // タイトルセクション
-                    VStack(spacing: 8) {
-                        Text("統計検定")
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
-                            .foregroundColor(.black)
-                        
-                        Text("2級テスト対策")
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
-                            .foregroundColor(.black)
-                    }
-                    .padding(.top, 40)
-                    
-                    // クイズボタングリッド
-                    ScrollView {
-                        LazyVStack(spacing: 10) {
-                            ForEach(QuizTopic.allCases) { topic in
-                                NavigationLink(destination: QuizView(topic: topic)) {
-                                    Text(topic.title)
-                                        .font(.subheadline)
-                                        .foregroundColor(Color(red: 0.2, green: 0.4, blue: 0.8))
-                                        .frame(maxWidth: .infinity, minHeight: 50)
-                                        .background(Color.white)
-                                        .cornerRadius(12)
-                                        .shadow(color: .gray.opacity(0.3), radius: 4, x: 0, y: 2)
-                                }
-                                .buttonStyle(PlainButtonStyle())
+            ScrollView {
+                VStack(spacing: 16) {
+                    // 最近間違えた問題ボタン (Gridの上に配置)
+                    NavigationLink(destination: QuizView(topic: .mistakes)) {
+                        HStack {
+                            Image(systemName: "exclamationmark.triangle.fill")
+                                .font(.title2)
+                                .foregroundColor(.white)
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("最近間違えた問題")
+                                    .font(.headline)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(.white)
+                                Text(mistakeCount > 0 ? "\(mistakeCount)問" : "ランダム10問")
+                                    .font(.subheadline)
+                                    .foregroundColor(.white.opacity(0.9))
                             }
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(.white.opacity(0.8))
                         }
-                        .padding(.horizontal, 32)
+                        .padding()
+                        .background(Color.orange)
+                        .cornerRadius(16)
+                        .shadow(color: .black.opacity(0.1), radius: 4, x: 0, y: 2)
                     }
-                    
-                    Spacer()
+                    .buttonStyle(.plain)
+                    .padding(.top, 16)
+
+                    // ハード要件: LazyVGrid
+                    LazyVGrid(columns: columns, spacing: 12) {
+                        ForEach(QuizTopic.allCases.filter { $0 != .mistakes }) { topic in
+                            NavigationLink {
+                                QuizView(topic: topic)
+                            } label: {
+                                CardTile(title: topic.title.replacingOccurrences(of: "ジャンル", with: ""))
+                            }
+                            .buttonStyle(.plain)
+                            .frame(height: 88) // ハード要件: 高さ88pt固定
+                        }
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 32)
                 }
             }
-            .navigationBarHidden(true)
+            // ハード要件: 背景設定
+            .background(
+                Group {
+                    if UIImage(named: "home_background") != nil {
+                        Image("home_background")
+                            .resizable()
+                            .scaledToFill()
+                            .ignoresSafeArea()
+                    } else {
+                        Color(.systemGroupedBackground)
+                            .ignoresSafeArea()
+                    }
+                }
+            )
+            // ハード要件: タイトルはtoolbar(.principal)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    VStack(spacing: 2) {
+                        Text("統計検定")
+                            .font(.system(size: 34, weight: .bold))
+                        Text("2級テスト対策")
+                            .font(.system(size: 30, weight: .bold))
+                            .foregroundColor(.blue)
+                    }
+                }
+            }
+            .navigationBarTitleDisplayMode(.inline)
             .onAppear {
+                updateMistakeCount()
                 AdsManager.shared.preload()
             }
         }
+        .navigationViewStyle(StackNavigationViewStyle())
+    }
+    
+    private func updateMistakeCount() {
+        mistakeCount = HistoryManager.shared.getIncorrectQuestionIDs().count
+    }
+}
+
+// ハード要件: CardTile実装
+struct CardTile: View {
+    let title: String
+    var body: some View {
+        Text(title)
+            .font(.headline)
+            .foregroundColor(.primary)          // 親のtint/foreground影響を遮断
+            .lineLimit(2)
+            .minimumScaleFactor(0.78)
+            .truncationMode(.tail)
+            .layoutPriority(1)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(14)
+            .background(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .fill(Color(.systemBackground))
+                    .shadow(color: .black.opacity(0.08), radius: 8, y: 4)
+            )
+            .contentShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+    }
+}
+
+struct HomeView_Previews: PreviewProvider {
+    static var previews: some View {
+        HomeView()
     }
 }

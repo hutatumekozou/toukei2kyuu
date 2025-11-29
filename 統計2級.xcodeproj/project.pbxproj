@@ -17,6 +17,7 @@
 		008 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108 /* HomeView.swift */; };
 		009 /* QuizView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 109 /* QuizView.swift */; };
 		010 /* ResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 110 /* ResultView.swift */; };
+		011 /* HistoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 111 /* HistoryManager.swift */; };
 		012 /* questions in Resources */ = {isa = PBXBuildFile; fileRef = 202 /* questions */; };
 		013 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 301 /* GoogleMobileAds */; };
 		1D2246752ED7E81400130E78 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1D2246742ED7E81400130E78 /* Assets.xcassets */; };
@@ -34,6 +35,7 @@
 		108 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		109 /* QuizView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuizView.swift; sourceTree = "<group>"; };
 		110 /* ResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultView.swift; sourceTree = "<group>"; };
+		111 /* HistoryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryManager.swift; sourceTree = "<group>"; };
 		1D2246742ED7E81400130E78 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		201 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		202 /* questions */ = {isa = PBXFileReference; lastKnownFileType = folder; path = questions; sourceTree = "<group>"; };
@@ -88,6 +90,7 @@
 			isa = PBXGroup;
 			children = (
 				106 /* QuizRepository.swift */,
+				111 /* HistoryManager.swift */,
 			);
 			path = Repository;
 			sourceTree = "<group>";
@@ -214,6 +217,7 @@
 				008 /* HomeView.swift in Sources */,
 				009 /* QuizView.swift in Sources */,
 				010 /* ResultView.swift in Sources */,
+				011 /* HistoryManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
